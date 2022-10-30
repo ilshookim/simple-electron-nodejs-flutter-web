@@ -2,6 +2,9 @@
 
 A simple Electron application using NodeJS middleware with Flutter web and Dart.
 
+![Screenshot Home](screenshots/home.png)
+![Screenshot Settings](screenshots/settings.png)
+
 This project name is wapui (web application platform for ui).
 
 - electron release application to MacOS, Linux and Windows (electron: version 21)
