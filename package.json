@@ -1,0 +1,43 @@
+{
+  "scripts": {
+    "reset": "npm run clean && del-cli --force node_modules/ package-lock.json pubspec.lock web/pubspec.yaml web/pubspec.lock web/.dart_tool web/middleware/db/data.sqlite3",
+    "clean": "npm run app:clean && npm run mw:clean && del-cli --force dist/",
+    "build": "npm run mw:build && npm run app:build",
+    "rebuild": "npm run clean && npm run build",
+    "release": "npm run rebuild && npm run app:deploy",
+    "app:clean": "flutter clean",
+    "app:build": "npm run mw:clean && cpy pubspec.yaml web/ && flutter build web",
+    "app:rebuild": "npm run app:clean && npm run app:build",
+    "app:release": "npm run app:rebuild && npm run app:deploy",
+    "app:deploy": "del-cli --force dist/ && cd build/web && npm install && npm run release",
+    "app": "cd build/web && npm run start",
+    "middleware:sqlite3": "cd build/web && npm run sqlite3",
+    "middleware": "cd build/web && npm run mw",
+    "mw:clean": "del-cli --force web/pubspec.yaml web/pubspec.lock web/.dart_tool web/package-lock.json web/node_modules",
+    "mw:build": "del-cli --force web/middleware/db/data.sqlite3 && cd web && npm install && npm run db:migrate && npm run db:seed",
+    "mw:rebuild": "npm run mw:clean && npm run mw:build",
+    "mw:sqlite3": "cd web && npm install && npm run sqlite3",
+    "mw": "cd web && npm install && npm run mw"
+  },
+  "devDependencies": {
+    "cpy-cli": "^4.2.0",
+    "del-cli": "^5.0.0",
+    "electron": "^21.1.0",
+    "electron-builder": "^23.6.0",
+    "npm-run-all": "^4.1.5"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "cors": "^2.8.5",
+    "electron-log": "^4.4.8",
+    "eventemitter2": "^6.4.9",
+    "express": "^4.18.1",
+    "express-ws": "^5.0.2",
+    "knex": "^2.3.0",
+    "morgan": "^1.10.0",
+    "nanoid": "^3.3.4",
+    "serialport": "^10.4.0",
+    "sqlite3": "^5.0.2",
+    "yaml": "^2.1.3"
+  }
+}

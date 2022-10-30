@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <style>
+    .container {
+      height: 100px;
+      width: 100px;
+      position: absolute;
+      top:0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin: auto;
+    }
+
+    .loader-1 {
+      height: 100px;
+      width: 100px;
+      border: 10px solid #10B9FD;
+      border-right-color: #0374C3;
+      border-radius: 50%;
+      animation: rotate 1.5s linear infinite;
+    }
+
+    @keyframes rotate {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .loader-2 {
+      font-family: Arial, Georgia, Times, "Times New Roman", serif;
+      font-size: 1.2rem;
+      font-weight: 500;
+      font-style : normal;
+      line-height : 1.6;
+      text-align : center;
+      color : #0374C3;
+    }
+  </style>
+  <head>
+    <!--
+      If you are serving your web app in a path other than the root, change the
+      href value below to reflect the base path you are serving from.
+
+      The path provided below has to start and end with a slash "/" in order for
+      it to work correctly.
+
+      For more details:
+      * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+      This is a placeholder for base href that will be replaced by the value of
+      the `--base-href` argument provided to `flutter build`.
+    -->
+    <!-- <base href="$FLUTTER_BASE_HREF"> -->
+
+    <meta charset="UTF-8">
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+    <meta name="description" content="wapui is a single application for cross platform using Electron, Flutter web and NodeJS.">
+
+    <!-- iOS meta tags & icons -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="wapui">
+    <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png"/>
+
+    <title>wapui</title>
+    <link rel="manifest" href="manifest.json">
+
+    <script type="text/javascript">
+      // Uses a combination of HTML elements, CSS, Canvas elements, and SVG elements.
+      window.flutterWebRenderer = "html";
+
+      // The value below is injected by flutter build, do not touch.
+      var serviceWorkerVersion = null;
+    </script>
+    <!-- This script adds the flutter initialization JS code -->
+    <script src="flutter.js" defer></script>
+  </head>
+  <body>
+    <div id="loading_status" class="loader-2"  style="font-size: 3.0em;">LOADING</div>
+    <div id="loading_indicator" class="container">
+      <div class="loader-1"></div>
+    </div>
+    <script>
+      window.addEventListener('load', function(ev) {
+        // Download main.dart.js
+        _flutter.loader.loadEntrypoint({
+          serviceWorker: {
+            serviceWorkerVersion: serviceWorkerVersion,
+          }
+        }).then(function(engineInitializer) {
+          return engineInitializer.initializeEngine();
+        }).then(function(appRunner) {
+          // Remove the loading elements
+          const loadingIndicator = document.getElementById("loading_indicator");
+          if (loadingIndicator) loadingIndicator.remove();
+          const loadingStatus = document.getElementById("loading_status");
+          if (loadingStatus) loadingStatus.remove();
+          // Run the flutter application
+          return appRunner.runApp();
+        });
+      });
+    </script>
+  </body>
+</html>

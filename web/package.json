@@ -1,0 +1,46 @@
+{
+  "name": "wapui",
+  "version": "1.0.2",
+  "productName": "wapui",
+  "description": "wapui is a single application for cross platform using Electron, Flutter web and NodeJS.",
+  "author": "ilshookim <ilshookim@gmail.com> (https://github.com/ilshookim/simple-electron-nodejs-flutter-web/)",
+  "main": "index.js",
+  "scripts": {
+    "db:migrate": "cd middleware && npx knex migrate:latest",
+    "db:seed": "cd middleware && npx knex seed:run",
+    "sqlite3": "sqlite3 ./middleware/db/data.sqlite3",
+    "release": "electron-builder build --publish=never",
+    "mw": "node ./middleware",
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^21.1.0",
+    "electron-builder": "^23.6.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "cors": "^2.8.5",
+    "electron-log": "^4.4.8",
+    "eventemitter2": "^6.4.9",
+    "express": "^4.18.1",
+    "express-ws": "^5.0.2",
+    "knex": "^2.3.0",
+    "morgan": "^1.10.0",
+    "nanoid": "^3.3.4",
+    "serialport": "^10.4.0",
+    "sqlite3": "^5.0.2",
+    "yaml": "^2.1.3"
+   },
+  "build": {
+    "asar": true,
+    "extraResources": [
+      "./middleware/db/data.sqlite3"
+    ],
+    "directories": {
+      "output": "../../dist"
+    },
+    "linux": {
+      "category": "Utility"
+    }
+  }
+}
