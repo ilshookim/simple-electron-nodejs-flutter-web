@@ -62,6 +62,6 @@
   "pageSettingsPlatform": "플랫폼 정보",
   "pageSettingsMiddleware": "미들웨어 정보",
   "pageSettingsLoggingPath": "로그 경로",
-  "pageSettingsDebugMode": "디버그",
+  "pageSettingsDebugMode": "디버깅",
   "pageSettingsNone": "없음"
 }

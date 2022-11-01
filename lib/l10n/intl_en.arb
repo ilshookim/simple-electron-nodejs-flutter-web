@@ -62,6 +62,6 @@
   "pageSettingsPlatform": "Platform Information",
   "pageSettingsMiddleware": "Middleware Information",
   "pageSettingsLoggingPath": "Log Path",
-  "pageSettingsDebugMode": "Debug",
+  "pageSettingsDebugMode": "Debugging",
   "pageSettingsNone": "None"
 }

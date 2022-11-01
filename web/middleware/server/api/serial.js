@@ -32,9 +32,21 @@ function list(req, res, next) {
 
 const serials = new Map();
 
+api.localbus.on('ws.*', (uid, data) => {
+  serials.forEach(function (port, key) {
+    const path = Buffer.from(key, 'base64').toString('utf8');
+    port.write(`${data}`, function(err) {
+      if (err) logger.info(`Websocket ${uid} -> Port ${path} error on write ${err.message}`);
+      else logger.info(`Websocket ${uid} -> Port ${path} to ${data}`);
+    });
+  });
+});
+
 function open(req, res, next) {
   const path = req.body.path;
-  if (serials.has(path)) {
+  const uid = req.body.websocket;
+  const key = Buffer.from(path).toString('base64');
+  if (serials.has(key)) {
     return res.json({
       ok: true,
       message: 'Serial port already open',
@@ -49,14 +61,7 @@ function open(req, res, next) {
 
   port.on('open', () => {
     logger.info(`Serial ${path} open`);
-    serials.set(path, port);
-
-    api.localbus.on('ws.*', (message) => {
-      port.write(`${message}`, function(err) {
-        if (err) logger.info(`Serial ${path} error on write ${err.message}`);
-        else logger.info(`Serial ${path} to ${message}`);
-      });
-    });
+    serials.set(key, port);
 
     res.json({
       ok: true,
@@ -70,22 +75,22 @@ function open(req, res, next) {
 
   port.on('data', (data) => {
     logger.info(`Serial ${path}: ${data}`);
-    api.localbus.emit(`serial.${path}`, data);
+    api.localbus.emit(`serial.${key}`, key, uid, data);
   })
 
   port.on('disconnect', () => {
     logger.info(`Serial ${path} disconnected`);
-    serials.delete(path);
+    serials.delete(key);
   });
 
   port.on('close', () => {
     logger.info(`Serial ${path} closed`);
-    serials.delete(path);
+    serials.delete(key);
   });
 
   port.on('error', (err) => {
     logger.info(`Serial ${path} error: ${err.message}`);
-    serials.delete(path);
+    serials.delete(key);
     next(api.resError({
       status: api.UNPROCESSABLE,
       message: `Serial port unprocessable: ${err.message}`,
@@ -95,9 +100,10 @@ function open(req, res, next) {
 
 function close(req, res, next) {
   const path = req.body.path;
+  const key = Buffer.from(path).toString('base64');
 
-  if (serials.has(path)) {
-    const port = serials.get(path);
+  if (serials.has(key)) {
+    const port = serials.get(key);
     port.close(); // path will be delete on close callback
 
     res.json({
@@ -133,6 +139,50 @@ function close(req, res, next) {
   }
 }
 
+function send(req, res, next) {
+  const path = req.body.path;
+  const data = req.body.data;
+  const key = Buffer.from(path).toString('base64');
+  const broadcast = true;
+
+  logger.info(`-> Port ${path} to ${data} until ${serials.size}`);
+  serials.forEach(function (port, key2) {
+    const path2 = Buffer.from(key2, 'base64').toString('utf8');
+    const write = broadcast;
+    if (write) port.write(`${data}`, function(err) {
+      if (err) logger.info(`-> Port ${path2} error on write ${err.message}`);
+      else logger.info(`-> Port ${path2} to ${data}`);
+    });
+  });
+
+  res.json({
+    ok: true,
+    message: 'Serial port send',
+    serial: {
+      port: req.body,
+      state: serials.has(key) ? 'open' : 'close',
+    },
+  });
+}
+
+function recv(req, res, next) {
+  const path = req.body.path;
+  const data = req.body.data;
+  const uid = req.body.websocket;
+  const key = Buffer.from(path).toString('base64');
+
+  api.localbus.emit(`serial.${key}`, key, uid, data);
+
+  res.json({
+    ok: true,
+    message: 'Serial port recv',
+    serial: {
+      port: req.body,
+      state: serials.has(key) ? 'open' : 'close',
+    },
+  });
+}
+
 router.route('/serial')
   .get(list);
 
@@ -141,5 +191,11 @@ router.route('/serial/open')
 
 router.route('/serial/close')
   .post(close);
+
+router.route('/serial/send')
+  .post(send);
+
+router.route('/serial/recv')
+  .post(recv);
 
 module.exports = router;

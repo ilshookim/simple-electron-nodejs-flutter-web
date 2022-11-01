@@ -24,6 +24,7 @@ class App extends StatelessWidget {
       ],
       child: Consumer<Data>(
         builder: (context, data, child) {
+          Data.initLogger(transfer: data);
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: ThemeData(

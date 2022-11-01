@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:logging/logging.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -33,27 +34,33 @@ class Data extends ChangeNotifier {
   get stream => _wsRecipientCtrl.stream;
   get sink => _wsSentCtrl.sink;
   get websocketID => _wsID;
+  get debug => api.debug;
   String get platform => api.cache['platform'];
   String get platformVersion => api.cache['platformVersion'];
   String get middlewareVersion => api.cache['middlewareVersion'];
   String get projectVersion => api.cache['projectVersion'];
-  String get loggingPath  => api.cache['loggingPath'];
-  bool get debug => api.debug;
+  String get loggingPath => api.cache['loggingPath'];
 
-  static void init(done, {defaultLevel = Level.CONFIG}) {
-    Logger.root.level = defaultLevel;
-    Logger.root.onRecord.listen((record) {
-      debugPrint('[${record.time}][${record.level.name}][${record.loggerName}] ${record.message}');
-    });
+  static void init(done) {
+    Data.initLogger();
 
     final logger = Logger('Data');
-    if (api.debug) logger.info('init');
+    logger.info('init');
     Future.wait([
       api.getConfigListFrom(),
       api.getSerialPortListFrom(),
     ]).whenComplete(() {
-      if (api.debug) logger.info('done');
+      logger.info('done');
       done();
+    });
+  }
+
+  static void initLogger({transfer, level = Level.CONFIG}) {
+    Logger.root.clearListeners();
+    Logger.root.level = level;
+    Logger.root.onRecord.listen((record) {
+      transfer?.sendJson({'type': 'log', 'level': record.level.name, 'name': record.loggerName, 'msg': record.message});
+      debugPrint('[${record.time}][${record.level.name}][${record.loggerName}] ${record.message}');
     });
   }
 
@@ -70,7 +77,7 @@ class Data extends ChangeNotifier {
     openSerialPort();
 
     _connectAndRetryWebSocket();
-    if (api.debug) logger.info('connect websocket (automatically): ${api.wsUrl}');
+    logger.info('connect websocket (automatically): ${api.wsUrl}');
   }
 
   @override
@@ -115,7 +122,7 @@ class Data extends ChangeNotifier {
     _wsChannel?.stream.listen((event) {
       _wsRecipientCtrl.add(event);
       if (_wsID.isEmpty) {
-        if (api.debug) logger.info('connected websocket: $event');
+        logger.info('connected websocket: $event');
         _wsID = event;
         notifyListeners();
       }
@@ -130,7 +137,7 @@ class Data extends ChangeNotifier {
       }
       Future.delayed(Duration(seconds: delay)).then((_) => _connectAndRetryWebSocket(delay: delay));
     }, onDone: () async {
-      if (api.debug) logger.info('connect websocket: done');
+      logger.info('connect websocket: done');
       _wsChannel = null;
       if (_wsID.isNotEmpty) {
         _wsID = '';
@@ -141,9 +148,13 @@ class Data extends ChangeNotifier {
   }
 
   void disconnectWebSocket() {
-    if (api.debug) logger.info('disconnect websocket');
+    logger.info('disconnect websocket');
     _wsChannel?.sink.close();
     _wsRecipientCtrl.add('disconnect');
+  }
+
+  void sendJson(payload) {
+    _wsSentCtrl.sink.add(json.encode(payload));
   }
 
   Future openSerialPort() async {

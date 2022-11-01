@@ -254,7 +254,7 @@ class _SettingsPageState extends State<SettingsPage> with AutomaticKeepAliveClie
                       tooltip: _.pageSettingsCheckWebSocket,
                       icon: const Icon(Icons.done_all),
                       onPressed: () async {
-                        data.sink.add('Welcome!');
+                        data.sendJson({'type': 'echo', 'msg': 'Welcome!'});
                       },
                     ),
                     if (data.debug) IconButton(

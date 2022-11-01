@@ -3,8 +3,7 @@
 const Path = require(`path`);
 
 // Modules to logging
-const Logger = require('electron-log');
-const [logger] = [Logger];
+const logger = require('electron-log');
 
 // Modules to control application life and create native browser window
 const { app, screen, BrowserWindow, Menu } = require(`electron`);
@@ -19,7 +18,7 @@ let mainWindow;
 function createWindow() {
   const recalc = false, ratio = 0.75;
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
-  const [recalcWidth, recalcHeight] = recalc ? [ratio * width, ratio * height] : [1024, 768];
+  const [recalcWidth, recalcHeight] = recalc ? [ratio * width, ratio * height] : [800, 600];
   logger.info(`createWindow ratio=${ratio}, width=${recalcWidth}, height=${recalcHeight} in ${__dirname}`);
 
   // Create the browser window.

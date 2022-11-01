@@ -21,11 +21,9 @@ class Api {
     originUrl = '$homeUrl';
     baseUrl = homeUrl.isScheme('http') && homeUrl.host != 'localhost' ? _makeUrl(originUrl, scheme: 'http') : defaultUrl;
     wsUrl = _makeUrl(baseUrl);
-    if (debug) {
-      logger.config('originUrl: $originUrl');
-      logger.config('baseUrl: $baseUrl');
-      logger.config('wsUrl: $wsUrl');
-    }
+    logger.config('originUrl: $originUrl');
+    logger.config('baseUrl: $baseUrl');
+    logger.config('wsUrl: $wsUrl');
   }
 
   String _makeUrl(origin, {String scheme = 'ws'}) {
