@@ -238,6 +238,8 @@ To start debugging (F5 key) flutter web in lib/main.dart.
 % npm run mw
 ```
 
+![Screenshot Debugging](screenshots/debugging-middleware-and-webapp.gif)
+
 ## Development Information
 
 Basically required to flutter, npm and node to build and release, also need to code, git to edit and debugging.
