@@ -50,17 +50,23 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                 style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
                 onPressed: () {
                   if (data.deviceState) {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const ProcessOne()));
                   } else {
-                    var snackBar = SnackBar(
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text(_.pageHomeDeviceOffline),
-                      action: SnackBarAction(
-                        label: _.pageHomeProcessStartForce,
-                        onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => const ProcessOne()));
-                        },
-                      ),
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      action: data.demoForceStart
+                        ? SnackBarAction(
+                          label: _.pageHomeProcessStartForce,
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const ProcessOne()));
+                          })
+                        : SnackBarAction(
+                          label: _.pageHomeDeviceMove,
+                          onPressed: () {
+                            DefaultTabController.of(context)?.animateTo(2);
+                          }),
+                    ));
                   }
                 },
                 child: Text(_.pageHomeProcessStart),

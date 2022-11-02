@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "reset": "npm run clean && del-cli --force node_modules/ package-lock.json pubspec.lock web/pubspec.yaml web/pubspec.lock web/.dart_tool web/middleware/db/data.sqlite3",
+    "reset": "npm run clean && del-cli --force node_modules/ package-lock.json pubspec.lock web/pubspec.yaml web/pubspec.lock web/node_modules web/.dart_tool web/middleware/db/data.sqlite3",
     "clean": "npm run app:clean && npm run mw:clean && del-cli --force dist/",
     "build": "npm run mw:build && npm run app:build",
     "rebuild": "npm run clean && npm run build",

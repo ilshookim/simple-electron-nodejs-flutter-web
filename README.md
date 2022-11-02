@@ -3,6 +3,8 @@
 A simple Electron application using NodeJS middleware with Flutter web and Dart.
 
 ![Screenshot Home](screenshots/home.png)
+![Screenshot Report](screenshots/report.png)
+![Screenshot Process](screenshots/process.png)
 ![Screenshot Settings](screenshots/settings.png)
 
 This project name is wapui (web application platform for ui).
@@ -29,6 +31,8 @@ This project shows you the below.
 - how to payload publication/subscription between websocket module and serial module using localbus in nodejs middleware
 - how to use static data and stream data in flutter web using flutter provider pattern
 - how to expose restful api in middleware and to use api in flutter web
+- how to show process steps using timer and animation in flutter web
+- how to show chart converted from csv format data in flutter web
 - how to read and show version in pubspec.yaml and package.json
 - how to debugging and logging in middleware or flutter web
 - how to use sqlite3 local database in middleware
@@ -354,37 +358,37 @@ C:\> winget install -e --id OpenJS.NodeJS
 
 In Powershell (administrator mode)
 
-```bat
+```cmd
 # install choco
 C:\> "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))"
 
 # install flutter
-choco install flutter --pre 
-git config --global --add safe.directory C:/tools/flutter
+C:\> choco install flutter --pre 
+C:\> git config --global --add safe.directory C:/tools/flutter
 ```
 
 Check to versions
 
-```bat
-C:\>ver
+```cmd
+C:\> ver
 
 Microsoft Windows [Version 10.0.22000.1098]
 
-C:\>git --version
+C:\> git --version
 git version 2.38.1.windows.1
 
-C:\>node -v
+C:\> node -v
 v18.11.0
 
-C:\>npm -v
+C:\> npm -v
 8.19.2
 
-C:\>code -v
+C:\> code -v
 1.72.2
 d045a5eda657f4d7b676dedbfa7aab8207f8a075
 x64
 
-C:\>flutter --version
+C:\> flutter --version
 
 Flutter 3.4.0-17.1.pre • channel beta • https://github.com/flutter/flutter.git
 Framework • revision 9833838839 (5 weeks ago) • 2022-09-20 18:12:36 -0500

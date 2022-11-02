@@ -7,43 +7,20 @@ import 'package:flutter/material.dart';
 
 import 'api.dart';
 
+typedef SerialPortCallback = void Function(bool ok, String message);
+
 class Data extends ChangeNotifier {
   static const defaultLocale = 'en';
   static const defaultBaudRate = '115200';
   static const defaultSerialPort = '';
   static const defaultSerialPortNone = 'none';
+  static const defaultReportLabel = false;
+  static const defaultReportMarker = true;
+  static const defaultReportLegend = true;
   static final api = Api.instance;
-
-  final logger = Logger('Data');
-  bool _serialState = false;
-  String _locale = api.cache['locale'] ?? defaultLocale;
-  String _baudRate = api.cache['baudRate'] ?? defaultBaudRate;
-  String _serialPort = api.cache['serialPort'] ?? defaultSerialPort;
-  List<String> _serialPortList = [defaultSerialPortNone];
-  final StreamController<String> _wsRecipientCtrl = StreamController<String>();
-  final StreamController<String> _wsSentCtrl = StreamController<String>();
-  WebSocketChannel? _wsChannel;
-  String _wsID = '';
-
-  bool get deviceState => _serialState && _wsID.isNotEmpty;
-  bool get serialState => _serialState;
-  String get locale => _locale;
-  String get baudRate => _baudRate;
-  String get serialPort => _serialPortList.firstWhere((port) => port == _serialPort, orElse: () => Data.defaultSerialPortNone);
-  List<String> get serialPortList => _serialPortList;
-  get stream => _wsRecipientCtrl.stream;
-  get sink => _wsSentCtrl.sink;
-  get websocketID => _wsID;
-  get debug => api.debug;
-  String get platform => api.cache['platform'];
-  String get platformVersion => api.cache['platformVersion'];
-  String get middlewareVersion => api.cache['middlewareVersion'];
-  String get projectVersion => api.cache['projectVersion'];
-  String get loggingPath => api.cache['loggingPath'];
 
   static void init(done) {
     Data.initLogger();
-
     final logger = Logger('Data');
     logger.info('init');
     Future.wait([
@@ -64,18 +41,18 @@ class Data extends ChangeNotifier {
     });
   }
 
+  final logger = Logger('Data');
   Data() {
-    final serialPortList = api.cache['serialPortList'];
+    final serialPortList = api.getCache('serialPortList');
     if (serialPortList != null && serialPortList.isNotEmpty) {
-      setSerialPortList(serialPortList);
+      this.serialPortList = serialPortList;
     }
-
     _wsSentCtrl.stream.listen((event) {
       _wsChannel?.sink.add(event);
     });
-
-    openSerialPort();
-
+    openSerialPort(onOpen: (ok, message) {
+      logger.info('open serial (automatically): $ok ($message)');
+    });
     _connectAndRetryWebSocket();
     logger.info('connect websocket (automatically): ${api.wsUrl}');
   }
@@ -86,35 +63,76 @@ class Data extends ChangeNotifier {
     super.dispose();
   }
 
-  void setDebug(bool debug) {
-    api.cache['debug'] = '$debug';
-    notifyListeners();
-    api.setConfigTo('debug', '$debug');
-  }
+  bool get demoForceStart => true;
+  String get platform => api.getStringCache('platform');
+  String get platformVersion => api.getStringCache('platformVersion');
+  String get middlewareVersion => api.getStringCache('middlewareVersion');
+  String get projectVersion => api.getStringCache('projectVersion');
+  String get loggingPath => api.getStringCache('loggingPath');
 
-  void setLocale(String locale) {
+  bool get debug => api.getBoolCache('debug');
+  set debug(bool debug) => api.setConfigTo('debug', debug).then((_) => notifyListeners());
+
+  String _locale = api.getStringCache('locale', defaults: defaultLocale);
+  String get locale => _locale;
+  set locale(String locale) {
     _locale = locale;
-    notifyListeners();
-    api.setConfigTo('locale', locale);
+    api.setConfigTo('locale', locale).then((_) => notifyListeners());
   }
 
-  void setBaudRate(String baudRate) {
+  String _baudRate = api.getStringCache('baudRate', defaults: defaultBaudRate);
+  String get baudRate => _baudRate;
+  set baudRate(String baudRate) {
     _baudRate = baudRate;
-    notifyListeners();
-    api.setConfigTo('baudRate', baudRate);
+    api.setConfigTo('baudRate', baudRate).then((_) => notifyListeners());
   }
 
-  void setSerialPort(String serialPort) {
+  String _serialPort = api.getStringCache('serialPort', defaults: defaultSerialPort);
+  String get serialPort => _serialPortList.firstWhere((port) => port == _serialPort, orElse: () => Data.defaultSerialPortNone);
+  set serialPort(String serialPort) {
     _serialPort = serialPort;
-    notifyListeners();
-    api.setConfigTo('serialPort', serialPort);
+    api.setConfigTo('serialPort', serialPort).then((_) => notifyListeners());
   }
 
-  void setSerialPortList(List<String> serialPortList) {
+  List<String> _serialPortList = [defaultSerialPortNone];
+  List<String> get serialPortList => _serialPortList;
+  set serialPortList(List<String> serialPortList) {
     serialPortList.insert(0, defaultSerialPortNone);
     _serialPortList = serialPortList;
     notifyListeners();
   }
+
+  bool _reportLabel = api.getBoolCache('reportLabel', defaults: defaultReportLabel);
+  bool get reportLabel => _reportLabel;
+  set reportLabel(bool reportLabel) {
+    _reportLabel = reportLabel;
+    api.setConfigTo('reportLabel', reportLabel).then((_) => notifyListeners());
+  }
+
+  bool _reportMarker = api.getBoolCache('reportMarker', defaults: defaultReportMarker);
+  bool get reportMarker => _reportMarker;
+  set reportMarker(bool reportMarker) {
+    _reportMarker = reportMarker;
+    api.setConfigTo('reportMarker', reportMarker).then((_) => notifyListeners());
+  }
+
+  bool _reportLegend = api.getBoolCache('reportLegend', defaults: defaultReportLegend);
+  bool get reportLegend => _reportLegend;
+  set reportLegend(bool reportLegend) {
+    _reportLegend = reportLegend;
+    api.setConfigTo('reportLegend', reportLegend).then((_) => notifyListeners());
+  }
+
+  final StreamController<String> _wsRecipientCtrl = StreamController<String>();
+  final StreamController<String> _wsSentCtrl = StreamController<String>();
+  get stream => _wsRecipientCtrl.stream;
+  get sink => _wsSentCtrl.sink;
+  WebSocketChannel? _wsChannel;
+  get websocketID => _wsID;
+  String _wsID = '';
+  bool _serialState = false;
+  bool get serialState => _serialState;
+  bool get deviceState => _serialState && _wsID.isNotEmpty;
 
   void _connectAndRetryWebSocket({int delay = 3}) {
     _wsChannel ??= WebSocketChannel.connect(Uri.parse(api.wsUrl));
@@ -157,22 +175,25 @@ class Data extends ChangeNotifier {
     _wsSentCtrl.sink.add(json.encode(payload));
   }
 
-  Future openSerialPort() async {
-    if (serialPort == defaultSerialPortNone) return {'ok': false, 'message': defaultSerialPortNone};
-    final result = await api.openSerialPortTo(serialPort, baudRate);
-    if (result['ok'] ?? false) _serialState = true;
+  Future openSerialPort({SerialPortCallback? onOpen}) async {
+    if (serialPort == defaultSerialPortNone && onOpen != null) { onOpen(false, defaultSerialPortNone); return false; }
+    final response = await api.openSerialPortTo(serialPort, baudRate);
+    final ok = response['ok'] ?? false;
+    if (!ok && onOpen != null) { onOpen(response['message'] ?? 'Unknown', ok); return false; }
+    if (onOpen != null) onOpen(ok, serialPort);
+    _serialState = true;
     notifyListeners();
-    return result;
+    return true;
   }
 
-  bool closeSerialPort() {
-    if (serialPort == defaultSerialPortNone) return false;
-    api.closeSerialPortTo(serialPort).then((ok) {
-      if (ok) {
-        _serialState = false;
-        notifyListeners();
-      }
-    });
+  Future closeSerialPort({SerialPortCallback? onClose}) async {
+    if (serialPort == defaultSerialPortNone && onClose != null) { onClose(false, defaultSerialPortNone); return false; }
+    final response = await api.closeSerialPortTo(serialPort);
+    final ok = response['ok'] ?? false;
+    if (!ok && onClose != null) { onClose(response['message'] ?? 'Unknown', ok); return false; }
+    if (onClose != null) onClose(ok, serialPort);
+    _serialState = false;
+    notifyListeners();
     return true;
   }
 }

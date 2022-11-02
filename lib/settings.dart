@@ -25,7 +25,7 @@ class _SettingsPageState extends State<SettingsPage> with AutomaticKeepAliveClie
     final baudRates = [2400, 4800, 9600, 19200, 28800, 38400, 57600, 76800, 115200, 230400, 460800, 576000, 921600];
     final data = Provider.of<Data>(context);
     final api = Api.instance;
-    var websocketState = 'none';
+    var websocketState = Data.defaultSerialPortNone;
 
     return Scaffold(
       appBar: AppBar(
@@ -45,53 +45,31 @@ class _SettingsPageState extends State<SettingsPage> with AutomaticKeepAliveClie
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      if (data.debug) IconButton(
-                        tooltip: _.pageSettingsOpenSerialPort,
-                        icon: const Icon(Icons.layers),
-                        onPressed: () async {
-                          final result = await data.openSerialPort();
-                          if (!(result['ok'] ?? false)) {
-                            final message = result['message'] == Data.defaultSerialPortNone ? _.pageSettingsSerialPortIsNone : result['message'];
-                            // ignore: use_build_context_synchronously
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text(message),
-                            ));
-                          }
-                        },
-                      ),
-                      if (data.debug) IconButton(
-                        tooltip: _.pageSettingsCloseSerialPort,
-                        icon: const Icon(Icons.layers_clear),
-                        onPressed: () {
-                          final portIsNone = data.closeSerialPort();
-                          if (!portIsNone) {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text(_.pageSettingsSerialPortIsNone),
-                            ));
-                          }
-                        },
-                      ),
                       Tooltip(
                         message: _.pageSettingsDevice,
                         child: Switch(
                           value: data.deviceState,
-                          onChanged: (value) async {
+                          onChanged: (_) {
                             if (data.serialState) {
-                              final portIsNone = data.closeSerialPort();
-                              if (!portIsNone) {
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                  content: Text(_.pageSettingsSerialPortIsNone),
-                                ));
-                              }
-                            } else {
-                              final result = await data.openSerialPort();
-                              if (!(result['ok'] ?? false)) {
-                                final message = result['message'] == Data.defaultSerialPortNone ? _.pageSettingsSerialPortIsNone : result['message'];
-                                // ignore: use_build_context_synchronously
+                              data.closeSerialPort(onClose: (ok, message) {
+                                if (ok) return;
+                                final _ = AppLocalizations.of(context)!;
+                                if (message == Data.defaultSerialPortNone) message = _.pageSettingsSerialPortIsNone;
+                                ScaffoldMessenger.of(context).hideCurrentSnackBar();
                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                   content: Text(message),
                                 ));
-                              }
+                              });
+                            } else {
+                              data.openSerialPort(onOpen: (ok, message) {
+                                if (ok) return;
+                                final _ = AppLocalizations.of(context)!;
+                                if (message == Data.defaultSerialPortNone) message = _.pageSettingsSerialPortIsNone;
+                                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                  content: Text(message),
+                                ));
+                              });
                             }
                           },
                         ),
@@ -106,13 +84,41 @@ class _SettingsPageState extends State<SettingsPage> with AutomaticKeepAliveClie
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      if (data.debug) IconButton(
+                        tooltip: _.pageSettingsOpenSerialPort,
+                        icon: const Icon(Icons.layers),
+                        onPressed: () {
+                          data.openSerialPort(onOpen: (ok, message) {
+                            if (ok) return;
+                            if (message == Data.defaultSerialPortNone) message = _.pageSettingsSerialPortIsNone;
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(message),
+                            ));
+                          });
+                        },
+                      ),
+                      if (data.debug) IconButton(
+                        tooltip: _.pageSettingsCloseSerialPort,
+                        icon: const Icon(Icons.layers_clear),
+                        onPressed: () {
+                          data.closeSerialPort(onClose: (ok, message) {
+                            if (ok) return;
+                            if (message == Data.defaultSerialPortNone) message = _.pageSettingsSerialPortIsNone;
+                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(message),
+                            ));
+                          });
+                        },
+                      ),
                       IconButton(
                         tooltip: _.pageSettingsRefresh,
                         icon: const Icon(Icons.refresh),
                         onPressed: () {
                           api.getSerialPortListFrom().then((serialPortList) {
                             if (serialPortList.isNotEmpty) {
-                              data.setSerialPortList(serialPortList);
+                              data.serialPortList = serialPortList;
                             }
                           });
                         },
@@ -129,7 +135,7 @@ class _SettingsPageState extends State<SettingsPage> with AutomaticKeepAliveClie
                         },
                         onSelected: (String value){
                           if (data.serialState) data.closeSerialPort();
-                          data.setSerialPort(value);
+                          data.serialPort = value;
                         },
                       ),
                     ],
@@ -154,7 +160,7 @@ class _SettingsPageState extends State<SettingsPage> with AutomaticKeepAliveClie
                         },
                         onSelected: (String value){
                           if (data.serialState) data.closeSerialPort();
-                          data.setBaudRate(value);
+                          data.baudRate = value;
                         },
                       ),
                     ],
@@ -186,7 +192,7 @@ class _SettingsPageState extends State<SettingsPage> with AutomaticKeepAliveClie
                       ];
                     },
                     onSelected: (String value){
-                      data.setLocale(value);
+                      data.locale = value;
                     },
                   ),
                 ),
@@ -198,9 +204,7 @@ class _SettingsPageState extends State<SettingsPage> with AutomaticKeepAliveClie
                     child: Checkbox(
                       value: data.debug,
                       onChanged: (value) {
-                        if (value != null) {
-                          data.setDebug(value);
-                        }
+                        if (value != null) data.debug = value;
                       },
                     ),
                   ),
@@ -291,7 +295,7 @@ class _SettingsPageState extends State<SettingsPage> with AutomaticKeepAliveClie
                     IconButton(
                       tooltip: _.pageSettingsCopyInfo,
                       icon: const Icon(Icons.content_copy),
-                      onPressed: () async {
+                      onPressed: () {
                         final info = data.loggingPath;
                         Clipboard.setData(ClipboardData(text: info));
                       },

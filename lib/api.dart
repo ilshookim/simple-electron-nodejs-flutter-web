@@ -9,14 +9,16 @@ class Api {
   static final homeUrl = Uri.parse(window.location.href);
   static const defaultUrl = 'http://localhost:8090';
 
+  final Map _cache = {};
+  setCache(key, value) => _cache[key] = value;
+  getCache(key, {defaults}) => _cache[key] ?? defaults;
+  getBoolCache(key, {defaults = false}) => _cache[key] != null ? _cache[key] == '${true}' ? true : false : defaults;
+  getStringCache(key, {defaults = ''}) => _cache[key] ?? defaults;
+
   late String wsUrl;
   late String baseUrl;
   late String originUrl;
-  final Map cache = {};
   final logger = Logger('Api');
-
-  get debug => cache['debug'] != null && cache['debug'] == '${true}';
-
   Api() {
     originUrl = '$homeUrl';
     baseUrl = homeUrl.isScheme('http') && homeUrl.host != 'localhost' ? _makeUrl(originUrl, scheme: 'http') : defaultUrl;
@@ -32,26 +34,22 @@ class Api {
     return url;
   }
 
-  void _setCache(key, value) {
-    cache[key] = value;
-    logger.config('set cache $key to $value');
-  }
-
   Future getConfigFrom(key) async {
     final url = Uri.parse('$baseUrl/config/$key');
     final response = await http.get(url);
     if (response.statusCode != 200) {
       logger.severe(response.body);
-      return cache[key];
+      return _cache[key];
     }
     logger.info(response.body);
     final body = json.decode(response.body);
     final config = body['config'];
-    _setCache(key, config['value']);
-    return cache[key];
+    setCache(key, config['value']);
+    return _cache[key];
   }
 
   Future setConfigTo(key, value) async {
+    if (value is! String) value = '$value';
     final url = Uri.parse('$baseUrl/config/$key');
     final response = await http.put(url,
       headers: { 'Content-Type': 'application/json; charset=UTF-8' },
@@ -59,11 +57,11 @@ class Api {
     );
     if (response.statusCode != 200) {
       logger.severe(response.body);
-      return cache[key];
+      return _cache[key];
     }
     logger.info(response.body);
-    _setCache(key, value);
-    return cache[key];
+    setCache(key, value);
+    return _cache[key];
   }
 
   Future getConfigListFrom() async {
@@ -79,7 +77,7 @@ class Api {
     for (final config in configs) {
       final key = config['key'];
       final value = config['value'];
-      _setCache(key, value);
+      setCache(key, value);
     }
     return configs;
   }
@@ -95,8 +93,8 @@ class Api {
     logger.info(response.body);
     final body = json.decode(response.body);
     final portList = List<String>.from(body['portList'] as List);
-    _setCache(key, portList);
-    return cache[key];
+    setCache(key, portList);
+    return _cache[key];
   }
 
   Future openSerialPortTo(path, baudRate) async {
@@ -122,11 +120,10 @@ class Api {
     );
     if (response.statusCode != 200) {
       logger.severe(response.body);
-      return false;
+    } else {
+      logger.info(response.body);
     }
-    logger.info(response.body);
     final body = json.decode(response.body);
-    final ok = body['ok'] ?? false;
-    return ok;
+    return body;
   }
 }
