@@ -3,9 +3,6 @@
 A simple Electron application using NodeJS middleware with Flutter web and Dart.
 
 ![Screenshot Home](screenshots/home.png)
-![Screenshot Report](screenshots/report.png)
-![Screenshot Process](screenshots/process.png)
-![Screenshot Settings](screenshots/settings.png)
 
 This project name is wapui (web application platform for ui).
 
@@ -36,6 +33,12 @@ This project shows you the below.
 - how to read and show version in pubspec.yaml and package.json
 - how to debugging and logging in middleware or flutter web
 - how to use sqlite3 local database in middleware
+
+## Screenshots
+
+![Screenshot Report](screenshots/report.png)
+![Screenshot Process](screenshots/process.png)
+![Screenshot Settings](screenshots/settings.png)
 
 ## Architecture
 
