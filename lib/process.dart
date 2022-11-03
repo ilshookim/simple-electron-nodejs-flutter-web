@@ -22,7 +22,7 @@ class ProcessOne extends StatelessWidget {
             tooltip: _.pageHomeProcessNext,
             icon: const Icon(Icons.done),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const ProcessSwitch()));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const ProcessAsk()));
             },
           ),
         ],
@@ -55,8 +55,8 @@ class ProcessOne extends StatelessWidget {
   }
 }
 
-class ProcessSwitch extends StatelessWidget {
-  const ProcessSwitch({super.key});
+class ProcessAsk extends StatelessWidget {
+  const ProcessAsk({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -74,8 +74,10 @@ class ProcessSwitch extends StatelessWidget {
             children: <Widget>[
               Text(_.pageHomeProcessCorrect, style: Theme.of(context).textTheme.headline4),
               Container(height: 40),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              Wrap(
+                direction: Axis.horizontal,
+                alignment: WrapAlignment.center,
+                runSpacing: 14,
                 children: [
                   SizedBox(
                     height: 40,
@@ -89,7 +91,7 @@ class ProcessSwitch extends StatelessWidget {
                       label: Text(_.pageHomeProcessHome),
                     ),
                   ),
-                  Container(width: 40),
+                  const VerticalDivider(),
                   SizedBox(
                     height: 40,
                     width: 200,
@@ -101,6 +103,7 @@ class ProcessSwitch extends StatelessWidget {
                       child: Text(_.pageHomeProcessOk),
                     ),
                   ),
+                  const VerticalDivider(),
                 ],
               ),
             ],
@@ -154,10 +157,10 @@ class MainProcessStatus extends StatefulWidget {
   const MainProcessStatus({super.key});
 
   @override
-  State<MainProcessStatus> createState() => _PreProcessSystemStatusState();
+  State<MainProcessStatus> createState() => _MainProcessSystemStatusState();
 }
 
-class _PreProcessSystemStatusState extends State<MainProcessStatus> {
+class _MainProcessSystemStatusState extends State<MainProcessStatus> {
   final logger = Logger('MainProcessStatus');
   final example = [
     "[Proc 1]..[in here message]",
