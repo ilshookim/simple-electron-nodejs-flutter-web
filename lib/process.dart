@@ -381,8 +381,10 @@ class ProcessComplete extends StatelessWidget {
             children: <Widget>[
               Text(_.pageHomeProcessCompleted, style: Theme.of(context).textTheme.headline4),
               Container(height: 40),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              Wrap(
+                direction: Axis.horizontal,
+                alignment: WrapAlignment.center,
+                runSpacing: 14,
                 children: [
                   SizedBox(
                     height: 40,
@@ -396,7 +398,7 @@ class ProcessComplete extends StatelessWidget {
                       label: Text(_.pageHomeProcessHome),
                     ),
                   ),
-                  Container(width: 40),
+                  const VerticalDivider(),
                   SizedBox(
                     height: 40,
                     width: 200,
@@ -410,6 +412,7 @@ class ProcessComplete extends StatelessWidget {
                       label: Text(_.pageHomeProcessRestart),
                     ),
                   ),
+                  const VerticalDivider(),
                 ],
               ),
             ],
