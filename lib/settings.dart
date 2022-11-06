@@ -55,8 +55,7 @@ class _SettingsPageState extends State<SettingsPage> with AutomaticKeepAliveClie
                                 if (ok) return;
                                 final _ = AppLocalizations.of(context)!;
                                 if (message == Data.defaultSerialPortNone) message = _.pageSettingsSerialPortIsNone;
-                                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(SnackBar(
                                   content: Text(message),
                                 ));
                               });
@@ -65,8 +64,7 @@ class _SettingsPageState extends State<SettingsPage> with AutomaticKeepAliveClie
                                 if (ok) return;
                                 final _ = AppLocalizations.of(context)!;
                                 if (message == Data.defaultSerialPortNone) message = _.pageSettingsSerialPortIsNone;
-                                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(SnackBar(
                                   content: Text(message),
                                 ));
                               });
@@ -91,8 +89,7 @@ class _SettingsPageState extends State<SettingsPage> with AutomaticKeepAliveClie
                           data.openSerialPort(onOpen: (ok, message) {
                             if (ok) return;
                             if (message == Data.defaultSerialPortNone) message = _.pageSettingsSerialPortIsNone;
-                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(SnackBar(
                               content: Text(message),
                             ));
                           });
@@ -105,8 +102,7 @@ class _SettingsPageState extends State<SettingsPage> with AutomaticKeepAliveClie
                           data.closeSerialPort(onClose: (ok, message) {
                             if (ok) return;
                             if (message == Data.defaultSerialPortNone) message = _.pageSettingsSerialPortIsNone;
-                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(SnackBar(
                               content: Text(message),
                             ));
                           });
