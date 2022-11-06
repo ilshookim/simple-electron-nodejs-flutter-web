@@ -52,8 +52,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                   if (data.deviceState) {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const ProcessOne()));
                   } else {
-                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(SnackBar(
                       content: Text(_.pageHomeDeviceOffline),
                       action: data.demoForceStart
                         ? SnackBarAction(
