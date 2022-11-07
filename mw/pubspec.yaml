@@ -10,6 +10,10 @@ dependencies:
   # with solid support for Windows, POSIX (Linux and Mac OS X), and the web.
   path: ^1.8.0
 
+  # Provides APIs for debugging and error logging, similar to loggers in other languages, 
+  # such as the Closure JS Logger and java.util.logging.Logger.
+  logging: ^1.1.0
+
   # Shelf Plus is a quality of life addon for your server-side development within the Shelf platform.
   shelf_plus: ^1.5.0
 

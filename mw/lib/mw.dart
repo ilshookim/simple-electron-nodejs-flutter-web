@@ -8,22 +8,24 @@ import 'ws.dart' as ws;
 import 'serial.dart' as serial;
 import 'config.dart' as config;
 
-Handler runMiddleware() {
+Handler router() {
   final app = Router().plus;
 
   app.use(corsHeaders());
 
-  final public = path.normalize(path.absolute(path.join(Platform.script.toFilePath(), '../../..', 'web')));
-  final static = createStaticHandler(public, defaultDocument: 'index.html');
+  app.get('/hello', () => 'Welcome!');
+
+  final public = createStaticHandler(
+    path.normalize(path.absolute(path.join(Platform.script.toFilePath(), '../../..', 'web'))),
+    defaultDocument: 'index.html');
+
   final router = cascade([
     config.router(),
     serial.router(),
     ws.router(),
-    static,
+    public,
     app,
   ]);
-
-  app.get('/hello', () => 'Welcome!');
 
   return router;
 }
