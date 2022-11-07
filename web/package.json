@@ -1,6 +1,6 @@
 {
   "name": "wapui",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "productName": "wapui",
   "description": "wapui is a single application for cross platform using Electron, Flutter web and NodeJS.",
   "author": "ilshookim <ilshookim@gmail.com> (https://github.com/ilshookim/simple-electron-nodejs-flutter-web/)",

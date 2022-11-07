@@ -1,0 +1,30 @@
+name: mw
+description: mw is a middlware for Flutter Web.
+version: 1.0.5
+
+environment:
+  sdk: '>=2.18.4 <3.0.0'
+
+dependencies:
+  # A string-based path manipulation library. All of the path operations you know and love, 
+  # with solid support for Windows, POSIX (Linux and Mac OS X), and the web.
+  path: ^1.8.0
+
+  # Shelf Plus is a quality of life addon for your server-side development within the Shelf platform.
+  shelf_plus: ^1.5.0
+
+  # CORS headers middleware for Shelf.
+  shelf_cors_headers: ^0.1.4
+
+  # Static file server support for the shelf package and ecosystem.
+  shelf_static: ^1.1.1
+
+  # A cancellable event emitter which supports context based event driven programming.
+  eventify: ^1.0.1
+
+  # A tiny, secure, URL-friendly, unique string ID generator. Dart implementation of ai/nanoid
+  nanoid: ^1.0.0
+
+dev_dependencies:
+  lints: ^2.0.0
+  test: ^1.16.0
