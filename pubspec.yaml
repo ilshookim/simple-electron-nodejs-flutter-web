@@ -65,6 +65,9 @@ dependencies:
   # A codec to transform between a string and a list of values. The string must be comma (configurable) separated values.
   csv: ^5.0.1
 
+  # Flutter plugin for displaying inline video with other Flutter widgets on Android, iOS, and web.
+  video_player: ^2.4.7
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

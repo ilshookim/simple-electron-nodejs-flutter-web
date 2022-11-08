@@ -14,7 +14,8 @@ This project name is wapui (web application platform for ui).
 - loading spinning animation and status supported (electron: index.html)
 - hiding electron menu supported (electron: index.html)
 - debugging mode in settings (flutter web)
-- copy basic information and status to clipboard (flutter web)
+- copy status and information to clipboard (flutter web)
+- play video both of local url and remote url (flutter web)
 - logging to browser console log and transfer to nodejs middleware (flutter web)
 - logging to specified log file (nodejs middleware)
 - restful API supported (nodejs middleware)
@@ -29,6 +30,7 @@ This project shows you the below.
 - how to use static data and stream data in flutter web using flutter provider pattern
 - how to expose restful api in middleware and to use api in flutter web
 - how to show process steps using timer and animation in flutter web
+- how to play video both of local url and remote url in flutter web
 - how to show chart converted from csv format data in flutter web
 - how to read and show version in pubspec.yaml and package.json
 - how to debugging and logging in middleware or flutter web
@@ -36,6 +38,7 @@ This project shows you the below.
 
 ## Screenshots
 
+![Screenshot Video](screenshots/video.png)
 ![Screenshot Report](screenshots/report.png)
 ![Screenshot Process](screenshots/process.png)
 ![Screenshot Settings](screenshots/settings.png)
@@ -47,7 +50,7 @@ Flutter Framework
 - /lib                  # flutter web
 - /lib/main.dart        # main of webapp
 - /lib/home.dart        # home page
-- /lib/process.dart     # process pages (scenario example)
+- /lib/process.dart     # process pages (example: video play, process steps)
 - /lib/reports.dart     # reports page
 - /lib/settings.dart    # settings page
 - /lib/data.dart        # data to serial, config/websocket
@@ -171,7 +174,7 @@ If you want change to preferred language such as 'ko' is korean.
 {
   key: 'locale',
   value: 'en' // 'ko' --> korean
-},
+}
 ```
 
 # Guide to Debugging

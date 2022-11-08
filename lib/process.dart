@@ -6,9 +6,58 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
+import 'package:video_player/video_player.dart';
 
-class ProcessOne extends StatelessWidget {
-  const ProcessOne({super.key});
+import 'api.dart';
+
+class ProcessWelcomeVideo extends StatefulWidget {
+  const ProcessWelcomeVideo({super.key});
+
+  @override
+  State<ProcessWelcomeVideo> createState() => _ProcessWelcomeVideoState();
+}
+
+class _ProcessWelcomeVideoState extends State<ProcessWelcomeVideo> {
+  final localVideoUrl = '${Api.instance.baseUrl}/bee.mp4';
+  final remoteVideoUrl = 'https://github.com/flutter/plugins/raw/main/packages/video_player/video_player/example/assets/Butterfly-209.mp4';
+  final mediaWidth = 1280 * 0.5, mediaHeight = 720 * 0.5;
+
+  late VideoPlayerController _controller;
+  var videoPlayerController = false;
+  var remoteVideo = false;
+
+  void loadVideo({int howLongDelaySeconds = 1}) {
+    if (videoPlayerController) {
+      setState(() {
+        _controller.dispose();
+      });
+    }
+    _controller = VideoPlayerController.network(remoteVideo ? remoteVideoUrl : localVideoUrl)
+      ..setLooping(true)
+      ..initialize().then((_) {
+        videoPlayerController = true;
+        Future.delayed(Duration(seconds: howLongDelaySeconds), () => setState(() {
+          _controller.play();
+        }));
+        if (remoteVideo) {
+          ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(SnackBar(
+            content: Text(remoteVideoUrl),
+          ));
+        }
+      });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadVideo();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +67,20 @@ class ProcessOne extends StatelessWidget {
         automaticallyImplyLeading: false,
         title: Text(_.pageHomeTitle),
         actions: [
+          Center(child: Text(_.pageHomeProcessWelcomeLocalVideo)),
+          Tooltip(
+            message: _.pageHomeProcessWelcomeSwitchVideo,
+            child: Switch(
+              activeColor: Colors.white,
+              value: remoteVideo,
+              onChanged: (value) {
+                remoteVideo = value;
+                loadVideo();
+              },
+            ),
+          ),
+          Center(child: Text(_.pageHomeProcessWelcomeRemoteVideo)),
+          const VerticalDivider(),
           IconButton(
             tooltip: _.pageHomeProcessNext,
             icon: const Icon(Icons.done),
@@ -29,11 +92,40 @@ class ProcessOne extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
-        child: Center(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(_.pageHomeProcessQRCode, style: Theme.of(context).textTheme.headline4),
+              Text(_.pageHomeProcessWelcome),
+              Container(height: 10),
+              Stack(
+                children: [
+                  ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: mediaWidth, maxHeight: mediaHeight),
+                    child: AspectRatio(
+                      aspectRatio: _controller.value.aspectRatio,
+                      child: _controller.value.isInitialized ? VideoPlayer(_controller) : Container(),
+                    ),
+                  ),
+                  ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: mediaWidth, maxHeight: mediaHeight),
+                    child: Center(
+                      child: !_controller.value.isInitialized || _controller.value.isBuffering
+                        ? const CircularProgressIndicator()
+                        : FloatingActionButton(
+                        backgroundColor: Colors.transparent,
+                        onPressed: () {
+                          setState(() {
+                            _controller.value.isPlaying ? _controller.pause() : _controller.play();
+                          });
+                        },
+                        child: Icon(_controller.value.isPlaying ? Icons.pause : Icons.play_arrow),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               Container(height: 40),
               SizedBox(
                 height: 40,
@@ -405,7 +497,7 @@ class ProcessComplete extends StatelessWidget {
                     child: ElevatedButton.icon(
                       onPressed: () {
                         Navigator.of(context).popUntil((route) => route.isFirst);
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const ProcessOne()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const ProcessWelcomeVideo()));
                       }, 
                       style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
                       icon: const Icon(Icons.refresh),
