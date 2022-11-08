@@ -126,7 +126,7 @@ class _ProcessWelcomeVideoState extends State<ProcessWelcomeVideo> {
                   ),
                 ],
               ),
-              Container(height: 40),
+              Container(height: 10),
               SizedBox(
                 height: 40,
                 width: 200,
