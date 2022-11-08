@@ -264,7 +264,7 @@ class _MainProcessSystemStatusState extends State<MainProcessStatus> {
                           leading: !stepsDone && reverse == step
                               ? const Icon(Icons.keyboard_arrow_right, color: Colors.blue)
                               : const Icon(Icons.keyboard_arrow_right),
-                          title: Text('${_.pageHomeProcessStep} ${item['step']} / $stepsTotal'),
+                          title: Text('${_.pageHomeProcessMainProcessStep(item['step'], stepsTotal)}'),
                           subtitle: Text(item['status']),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,

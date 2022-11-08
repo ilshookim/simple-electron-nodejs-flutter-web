@@ -28,11 +28,17 @@
   "pageHomeProcessNoExists": "없습니다",
   "pageHomeProcessRun": "실행",
   "pageHomeProcessNext": "다음",
-  "pageHomeProcessStep": "단계",
   "pageHomeProcessQRCode": "QR code 읽어 주십시오",
   "pageHomeProcessCorrect": "맞습니까?",
   "pageHomeProcessMainProcess": "메인 프로세스를 실행합니다",
   "pageHomeProcessMainProcessSystemStatus": "여기에 시스템 상태를 보여줍니다",
+  "pageHomeProcessMainProcessStep": "단계 {step} / {total}",
+  "@pageHomeProcessMainProcessStep": {
+    "placeholders": {
+      "step": {},
+      "total": {}
+    }
+  },
   "pageHomeProcessMainProcessDone": "메인 프로세스가 완료 되었습니다",
   "pageHomeProcessCompleted": "프로세스가 모두 완료 되었습니다",
   "pageSettingsTitle": "설정",

@@ -146,7 +146,7 @@ window.flutterWebRenderer = "html";  // in web/index.html
 ### Electron App (Application Menu)
 
 By default, electron default menu was removed.
-If you want show the menu, You just disable this line.
+If you want to show the menu, You just disable this line.
 
 ```js
 Menu.setApplicationMenu(null);  // in web/index.js
@@ -155,7 +155,7 @@ Menu.setApplicationMenu(null);  // in web/index.js
 ### Electron App (Window Size)
 
 By default, electron app size is fixed 800 x 600.
-If you want change the size to ratio 75% in primiary screen resolution, You just recalc = true; this line.
+If you want change the size to ratio 75% in primary screen resolution, You just recalc = true; this line.
 
 ```js
 const recalc = false, ratio = 0.75; // in web/index.js
@@ -164,7 +164,7 @@ const recalc = false, ratio = 0.75; // in web/index.js
 ### Middleware (Default Language)
 
 By default, language is en.
-If you want change to perfered language such as 'ko' is korean.
+If you want change to preferred language such as 'ko' is korean.
 
 ```js
  // in web/middleware/db/seeds/001_config_seed.js
@@ -223,7 +223,7 @@ To luanch the VSCode.
 
 To start debugging (F5 key) flutter web in lib/main.dart.
 
-- should better to editing source files for middleware in web/ sucn as index.js, index.html.
+- should better to editing source files for middleware in web/ such as index.js, index.html.
 
 ```bash
 # Clone this repository

@@ -28,11 +28,17 @@
   "pageHomeProcessNoExists": "NO",
   "pageHomeProcessRun": "RUN",
   "pageHomeProcessNext": "NEXT",
-  "pageHomeProcessStep": "STEP",
   "pageHomeProcessQRCode": "Read to QR code",
   "pageHomeProcessCorrect": "Is correct?",
   "pageHomeProcessMainProcess": "Run to Main Process",
   "pageHomeProcessMainProcessSystemStatus": "Here is in System Status",
+  "pageHomeProcessMainProcessStep": "STEP {step} / {total}",
+  "@pageHomeProcessMainProcessStep": {
+    "placeholders": {
+      "step": {},
+      "total": {}
+    }
+  },
   "pageHomeProcessMainProcessDone": "Main Process Done",
   "pageHomeProcessCompleted": "Process Completed",
   "pageSettingsTitle": "Settings",
@@ -49,7 +55,7 @@
   "pageSettingsDeviceOffline": "Device Offline",
   "pageSettingsSerialPort": "Serial Port",
   "pageSettingsBaudRate": "Baud Rate",
-  "pageSettingsLanguage": "Launguage",
+  "pageSettingsLanguage": "Language",
   "pageSettingsInputLanguage": "{locale, select, en {English} ko {Korean} other {-}}",
   "@pageSettingsInputLanguage": {
     "placeholders": {
