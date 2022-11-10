@@ -41,31 +41,43 @@ class App extends StatelessWidget {
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             locale: Locale(data.locale),
-            home: homePage(),
+            home: const LandingPage(),
           );
         },
       ),
     );
   }
+}
 
-  Widget homePage() {
-    return const DefaultTabController(
+class LandingPage extends StatelessWidget {
+  const LandingPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final _ = AppLocalizations.of(context)!;
+    final data = Provider.of<Data>(context);
+
+    if (data.demo && !data.demoInit) {
+      data.initReportDemo(_.pageReportDescription);
+    }
+
+    return DefaultTabController(
       length: 3,
       initialIndex: 1,
       child: Scaffold(
         bottomNavigationBar: TabBar(
           tabs: [
-            Tab(icon: Icon(Icons.timeline)),
-            Tab(icon: Icon(Icons.home)),
-            Tab(icon: Icon(Icons.settings)),
+            Tab(height: 42, child: Row(mainAxisSize: MainAxisSize.min, children: [const Icon(Icons.timeline), Text(' ${_.pageReportTab}')])),
+            Tab(height: 42, child: Row(mainAxisSize: MainAxisSize.min, children: [const Icon(Icons.home), Text(' ${_.pageHomeTab}')])),
+            Tab(height: 42, child: Row(mainAxisSize: MainAxisSize.min, children: [const Icon(Icons.settings), Text(' ${_.pageSettingsTab}')])),
           ],
           labelColor: Colors.blue,
-          indicator: UnderlineTabIndicator(
+          indicator: const UnderlineTabIndicator(
             borderSide: BorderSide(color: Colors.blue, width: 8.0),
-            insets: EdgeInsets.only(top: 0.0, bottom: 40.0),
+            insets: EdgeInsets.only(top: 0.0, bottom: 36.0),
           ),
         ),
-        body: TabBarView(
+        body: const TabBarView(
           children: [
             ReportsPage(),
             HomePage(),

@@ -68,6 +68,10 @@ dependencies:
   # Flutter plugin for displaying inline video with other Flutter widgets on Android, iOS, and web.
   video_player: ^2.4.7
 
+  # A package that allows you to use a native file explorer to pick single or multiple absolute file paths,
+  # with extension filtering support.
+  file_picker: ^5.2.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

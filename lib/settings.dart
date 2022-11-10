@@ -205,6 +205,26 @@ class _SettingsPageState extends State<SettingsPage> with AutomaticKeepAliveClie
                     ),
                   ),
                 ),
+                ListTile(
+                  leading: const Icon(Icons.lightbulb_outline),
+                  title: Text(_.pageSettingsDemoMode),
+                  trailing: Tooltip(
+                    message: _.pageSettingsDemoMode,
+                    child: Checkbox(
+                      value: data.demo,
+                      onChanged: (value) {
+                        if (value != null) {
+                          data.demo = value;
+                          if (value) {
+                            data.initReportDemo(_.pageReportDescription);
+                          } else {
+                            data.clearReport(name: _.pageReportDescription);
+                          }
+                        }
+                      },
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

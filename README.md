@@ -32,6 +32,7 @@ This project shows you the below.
 - how to show process steps using timer and animation in flutter web
 - how to play video both of local url and remote url in flutter web
 - how to show chart converted from csv format data in flutter web
+- how to show file dialog and read data from file in flutter web
 - how to read and show version in pubspec.yaml and package.json
 - how to debugging and logging in middleware or flutter web
 - how to use sqlite3 local database in middleware

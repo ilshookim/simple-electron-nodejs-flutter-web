@@ -9,6 +9,10 @@ exports.seed = db => db(Config.tableName).del()
       value: 'en'
     },
     {
+      key: 'demo',
+      value: 'true'
+    },
+    {
       key: 'serialPort',
       value: 'none'
     },

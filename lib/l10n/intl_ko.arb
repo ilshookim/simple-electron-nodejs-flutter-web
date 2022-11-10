@@ -1,12 +1,15 @@
 {
   "@@locale": "ko",
   "appTitle": "wapui",
+  "pageReportTab": "리포트",
   "pageReportTitle": "리포트",
   "pageReportDescription": "여기에 리포트를 보여줍니다",
   "pageReportMarker": "마커",
   "pageReportLabel": "레이블",
   "pageReportLegend": "범례",
   "pageReportShowHide": "보이기/감추기",
+  "pageReportOpenCSV": "파일 불러오기",
+  "pageHomeTab": "홈",
   "pageHomeTitle": "크로스플랫폼 UI",
   "pageHomeDeviceOnline": "디바이스에 정상적으로 연결되어 있습니다",
   "pageHomeDeviceOffline": "디바이스에 연결되어 있지 않습니다",
@@ -34,7 +37,7 @@
   "pageHomeProcessWelcomeSwitchVideo": "로컬/외부 비디오 변경",
   "pageHomeProcessCorrect": "맞습니까?",
   "pageHomeProcessMainProcess": "메인 프로세스를 실행합니다",
-  "pageHomeProcessMainProcessSystemStatus": "여기에 시스템 상태를 보여줍니다",
+  "pageHomeProcessMainProcessSystemStatus": "여기에 처리현황을 보여줍니다",
   "pageHomeProcessMainProcessStep": "단계 {step} / {total}",
   "@pageHomeProcessMainProcessStep": {
     "placeholders": {
@@ -44,6 +47,7 @@
   },
   "pageHomeProcessMainProcessDone": "메인 프로세스가 완료 되었습니다",
   "pageHomeProcessCompleted": "프로세스가 모두 완료 되었습니다",
+  "pageSettingsTab": "설정",
   "pageSettingsTitle": "설정",
   "pageSettingsCheckWebSocket": "웹소켓 체크",
   "pageSettingsReconnectWebSocket": "웹소켓 재접속",
@@ -77,5 +81,6 @@
   "pageSettingsMiddleware": "미들웨어 정보",
   "pageSettingsLoggingPath": "로그 경로",
   "pageSettingsDebugMode": "디버깅",
+  "pageSettingsDemoMode": "데모",
   "pageSettingsNone": "없음"
 }

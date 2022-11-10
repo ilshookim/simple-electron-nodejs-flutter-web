@@ -27,6 +27,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
         centerTitle: true,
         title: Text(_.pageHomeTitle),
         actions: [
+          Center(child: Text(_.pageSettingsDeviceState)),
           IconButton(
             tooltip: data.deviceState ? _.pageHomeDeviceOnline : _.pageHomeDeviceOffline,
             icon: (data.deviceState) ? const Icon(Icons.usb) : const Icon(Icons.usb, color: Colors.grey),
@@ -34,6 +35,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
               DefaultTabController.of(context)?.animateTo(2);
             },
           ),
+          const VerticalDivider(),
         ],
       ),
       body: Center(
@@ -54,7 +56,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                   } else {
                     ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(SnackBar(
                       content: Text(_.pageHomeDeviceOffline),
-                      action: data.demoForceStart
+                      action: data.demo
                         ? SnackBarAction(
                           label: _.pageHomeProcessStartForce,
                           onPressed: () {

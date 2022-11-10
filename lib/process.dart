@@ -328,8 +328,7 @@ class _MainProcessSystemStatusState extends State<MainProcessStatus> {
             tooltip: _.pageHomeProcessNext,
             icon: const Icon(Icons.done),
             onPressed: () {
-              Navigator.of(context).popUntil((route) => route.isFirst);
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const MainProcessDone()));
+              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const MainProcessDone()), (route) => route.isFirst);
             },
           ),
         ],
@@ -402,8 +401,7 @@ class _MainProcessSystemStatusState extends State<MainProcessStatus> {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.of(context).popUntil((route) => route.isFirst);
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const MainProcessDone()));
+                  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const MainProcessDone()), (route) => route.isFirst);
                 },
                 label: Text(_.pageHomeProcessOk),
               ),
@@ -496,9 +494,8 @@ class ProcessComplete extends StatelessWidget {
                     width: 200,
                     child: ElevatedButton.icon(
                       onPressed: () {
-                        Navigator.of(context).popUntil((route) => route.isFirst);
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const ProcessWelcomeVideo()));
-                      }, 
+                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const ProcessWelcomeVideo()), (route) => route.isFirst);
+                      },
                       style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
                       icon: const Icon(Icons.refresh),
                       label: Text(_.pageHomeProcessRestart),

@@ -1,12 +1,15 @@
 {
   "@@locale": "en",
   "appTitle": "wapui",
+  "pageReportTab": "Reports",
   "pageReportTitle": "Reports",
   "pageReportDescription": "Here is in Reports",
   "pageReportMarker": "Marker",
   "pageReportLabel": "Label",
   "pageReportLegend": "Legend",
   "pageReportShowHide": "Show/Hide",
+  "pageReportOpenCSV": "Load File",
+  "pageHomeTab": "Home",
   "pageHomeTitle": "Web Application Platform for UI",
   "pageHomeDeviceOnline": "Device Online",
   "pageHomeDeviceOffline": "Device Offline",
@@ -34,7 +37,7 @@
   "pageHomeProcessWelcomeSwitchVideo": "Switch to Local/Remote",
   "pageHomeProcessCorrect": "Is correct?",
   "pageHomeProcessMainProcess": "Run to Main Process",
-  "pageHomeProcessMainProcessSystemStatus": "Here is in System Status",
+  "pageHomeProcessMainProcessSystemStatus": "Here is in Process Status",
   "pageHomeProcessMainProcessStep": "STEP {step} / {total}",
   "@pageHomeProcessMainProcessStep": {
     "placeholders": {
@@ -44,6 +47,7 @@
   },
   "pageHomeProcessMainProcessDone": "Main Process Done",
   "pageHomeProcessCompleted": "Process Completed",
+  "pageSettingsTab": "Settings",
   "pageSettingsTitle": "Settings",
   "pageSettingsCheckWebSocket": "Check to WebSocket",
   "pageSettingsReconnectWebSocket": "Reconnect to WebSocket",
@@ -77,5 +81,6 @@
   "pageSettingsMiddleware": "Middleware Information",
   "pageSettingsLoggingPath": "Log Path",
   "pageSettingsDebugMode": "Debugging",
+  "pageSettingsDemoMode": "Demo Mode",
   "pageSettingsNone": "None"
 }
