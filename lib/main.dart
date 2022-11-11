@@ -72,12 +72,12 @@ class LandingPage extends StatelessWidget {
             Tab(height: 42, child: Row(mainAxisSize: MainAxisSize.min, children: [const Icon(Icons.settings), Text(' ${_.pageSettingsTab}')])),
           ],
           labelColor: Colors.blue,
-          indicator: const UnderlineTabIndicator(
-            borderSide: BorderSide(color: Colors.blue, width: 8.0),
-            insets: EdgeInsets.only(top: 0.0, bottom: 36.0),
-          ),
-        ),
+          indicator: ShapeDecoration(
+            shape: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.blue, width: 12.0)),
+            color: Colors.blue.shade50),
+      ),
         body: const TabBarView(
+          physics: NeverScrollableScrollPhysics(),
           children: [
             ReportsPage(),
             HomePage(),
