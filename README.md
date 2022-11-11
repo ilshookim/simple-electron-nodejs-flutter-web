@@ -223,7 +223,7 @@ Open the app in browser: http://localhost:8090
 
 ## To launch VSCode for coding and debugging
 
-To luanch the VSCode.
+To launch the VSCode.
 
 To start debugging (F5 key) flutter web in lib/main.dart.
 
