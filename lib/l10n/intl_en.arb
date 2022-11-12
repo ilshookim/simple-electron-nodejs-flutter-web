@@ -9,6 +9,12 @@
   "pageReportLegend": "Legend",
   "pageReportShowHide": "Show/Hide",
   "pageReportLoadFile": "Load File",
+  "pageReportLoadFileError": "Cannot read file > because {exc}",
+  "@pageReportLoadFileError": {
+    "placeholders": {
+      "exc": {}
+    }
+  },
   "pageReportNoData": "No Data",
   "pageHomeTab": "Home",
   "pageHomeTitle": "Web Application Platform for UI",

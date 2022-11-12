@@ -9,6 +9,12 @@
   "pageReportLegend": "범례",
   "pageReportShowHide": "보이기/감추기",
   "pageReportLoadFile": "파일 불러오기",
+  "pageReportLoadFileError": "파일에 문제가 있습니다 > 원인 {exc}",
+  "@pageReportLoadFileError": {
+    "placeholders": {
+      "exc": {}
+    }
+  },
   "pageReportNoData": "데이터가 없습니다",
   "pageHomeTab": "홈",
   "pageHomeTitle": "크로스플랫폼 UI",

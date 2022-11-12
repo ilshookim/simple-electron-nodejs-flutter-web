@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -16,6 +17,7 @@ class ReportsPage extends StatefulWidget {
 }
 
 class _ReportsPageState extends State<ReportsPage> with AutomaticKeepAliveClientMixin {
+  final logger = Logger('ReportsPage');
   bool visibility = true;
   num? visibleSeriesIndex;
 
@@ -95,13 +97,22 @@ class _ReportsPageState extends State<ReportsPage> with AutomaticKeepAliveClient
         extendedPadding: const EdgeInsetsDirectional.only(start: 20, end: 20),
         backgroundColor: Colors.blue.shade300.withOpacity(0.75),
         onPressed: () async {
-          FilePickerResult? picked = await FilePicker.platform.pickFiles();
-          if (picked != null) {
-            Uint8List? fileBytes = picked.files.first.bytes;
-            String fileName = picked.files.first.name;
-            if (fileBytes != null) {
-              data.importReportFromBytes(fileBytes, fileName);
+          try {
+            FilePickerResult? picked = await FilePicker.platform.pickFiles();
+            if (picked != null) {
+              Uint8List? fileBytes = picked.files.first.bytes;
+              String fileName = picked.files.first.name;
+              if (fileBytes != null) {
+                data.importReportFromBytes(fileBytes, fileName);
+              }
             }
+          }
+          catch (exc) {
+            final message = _.pageReportLoadFileError(exc);
+            logger.warning(message);
+            ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(SnackBar(
+              content: Text(message),
+            ));
           }
         },
       ),
