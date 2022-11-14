@@ -277,7 +277,7 @@ class _MainProcessSystemStatusState extends State<MainProcessStatus> {
   final stepsStatus = <String>[];
 
   Timer? _timer;
-  void startTimerRandomly({min=800, max=1800}) {
+  void startTimerRandomly({min=200, max=800}) {
     final random = Random();
     final randomDuration = Duration(milliseconds: min + random.nextInt(max - min));
     _timer?.cancel();

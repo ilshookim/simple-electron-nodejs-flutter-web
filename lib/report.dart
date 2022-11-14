@@ -18,8 +18,18 @@ class ReportsPage extends StatefulWidget {
 
 class _ReportsPageState extends State<ReportsPage> with AutomaticKeepAliveClientMixin {
   final logger = Logger('ReportsPage');
-  bool visibility = true;
-  num? visibleSeriesIndex;
+  final palette = const <Color>[
+    Color.fromRGBO(75, 135, 185, 1),
+    Color.fromRGBO(192, 108, 132, 1),
+    Color.fromRGBO(246, 114, 128, 1),
+    Color.fromRGBO(248, 177, 149, 1),
+    Color.fromRGBO(195, 196, 131, 1.0),
+    Color.fromRGBO(116, 180, 155, 1),
+    Color.fromRGBO(0, 168, 181, 1),
+    Color.fromRGBO(73, 76, 162, 1),
+    Color.fromRGBO(255, 205, 96, 1),
+    Color.fromRGBO(175, 175, 175, 1.0)
+  ];
 
   @override
   bool get wantKeepAlive => true;
@@ -57,18 +67,6 @@ class _ReportsPageState extends State<ReportsPage> with AutomaticKeepAliveClient
           ),
           Center(child: Text(_.pageReportMarker)),
           const VerticalDivider(),
-          Tooltip(
-            message: _.pageReportShowHide,
-            child: Checkbox(
-              value: data.reportLegend,
-              onChanged: (value) {
-                if (value != null) data.reportLegend = value;
-              },
-            ),
-          ),
-          Center(child: Text(_.pageReportLegend)),
-          const VerticalDivider(),
-          const VerticalDivider(),
         ],
       ),
       body: HorizontalSplitter(
@@ -77,12 +75,14 @@ class _ReportsPageState extends State<ReportsPage> with AutomaticKeepAliveClient
           primaryXAxis: CategoryAxis(),
           tooltipBehavior: TooltipBehavior(enable: true),
           title: ChartTitle(text: data.reportName.isEmpty ? _.pageReportDescription : data.reportName),
+          palette: palette,
           series: onSeries(data),
-          legend: onLegend(data),
+          legend: Legend(isVisible: false),
         ),
         lower: data.reportSeries.isEmpty
-          ? Center(child: Text(_.pageReportNoData))
-          : ScrollableDataTable<double>(
+            ? Center(child: Text(_.pageReportNoData))
+            : ScrollableDataTable<double>(
+            palette: palette,
             series: data.reportSeries,
             rows: data.reportTitles,
             columns: List.generate(40, (index) => '${index + 1}'),
@@ -132,18 +132,11 @@ class _ReportsPageState extends State<ReportsPage> with AutomaticKeepAliveClient
           yValueMapper: (sample, _) => sample,
           markerSettings: MarkerSettings(isVisible: data.reportMarker, width: 4, height: 4),
           dataLabelSettings: DataLabelSettings(isVisible: data.reportLabel),
-          isVisible: visibleSeriesIndex == null || visibleSeriesIndex == i ? true : visibility,
+          isVisible: !data.isReportTitleVisible(data.reportTitles[i]),
         ),
       );
     }
     return series;
-  }
-
-  onLegend(data) {
-    return Legend(
-      isVisible: data.reportLegend,
-      toggleSeriesVisibility: true,
-    );
   }
 }
 
@@ -157,13 +150,15 @@ class ScrollableDataTable<T> extends StatefulWidget {
   final double cellHeight;
   final double cellMargin;
   final double cellSpacing;
+  final palette;
 
   const ScrollableDataTable({
+    required this.palette,
     required this.series,
     required this.rows,
     required this.columns,
     required this.builder,
-    this.columnWidth = 90,
+    this.columnWidth = 110,
     this.cellHeight = 30,
     this.cellWidth = 60,
     this.cellMargin = 10,
@@ -176,20 +171,26 @@ class ScrollableDataTable<T> extends StatefulWidget {
 }
 
 class ScrollableDataTableState<T> extends State<ScrollableDataTable<T>> {
+  final logger = Logger('ScrollableDataTable');
   final _yController = ScrollController();
   final _xController = ScrollController();
   final _tableYController = ScrollController();
   final _tableXController = ScrollController();
+  var _toggle = true;
 
   @override
   void initState() {
     super.initState();
     _tableXController.addListener(() => _xController.jumpTo(_tableXController.position.pixels));
     _tableYController.addListener(() => _yController.jumpTo(_tableYController.position.pixels));
+    _yController.addListener(() => _tableYController.jumpTo(_yController.position.pixels));
   }
 
   @override
   Widget build(BuildContext context) {
+    final _ = AppLocalizations.of(context)!;
+    final data = Provider.of<Data>(context);
+
     return Stack(
       children: <Widget>[
         Row(
@@ -197,8 +198,7 @@ class ScrollableDataTableState<T> extends State<ScrollableDataTable<T>> {
             SingleChildScrollView(
               controller: _yController,
               scrollDirection: Axis.vertical,
-              physics: const NeverScrollableScrollPhysics(),
-              child: onRows(),
+              child: onDataRows(_, data),
             ),
             Flexible(
               child: Scrollbar(
@@ -219,13 +219,13 @@ class ScrollableDataTableState<T> extends State<ScrollableDataTable<T>> {
         ),
         Row(
           children: <Widget>[
-            onCorner(),
+            onCorner(_, data),
             Flexible(
               child: SingleChildScrollView(
                 controller: _xController,
                 scrollDirection: Axis.horizontal,
                 physics: const NeverScrollableScrollPhysics(),
-                child: onColumns(),
+                child: onDataColumns(),
               ),
             ),
           ],
@@ -234,17 +234,32 @@ class ScrollableDataTableState<T> extends State<ScrollableDataTable<T>> {
     );
   }
 
-  onCorner() => Material(
+  onCorner(_, data) => Material(
     child: DataTable(
+      decoration: BoxDecoration(color: Colors.grey[100]),
       horizontalMargin: widget.cellMargin,
       columnSpacing: widget.cellSpacing,
       headingRowHeight: widget.cellHeight,
       dataRowHeight: widget.cellHeight,
-      columns: [DataColumn(label: SizedBox(width: widget.columnWidth, child: const Text('')))],
+      columns: [DataColumn(label: SizedBox(
+        width: widget.columnWidth,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Checkbox(value: _toggle, onChanged: (value) {
+              if (value != null) {
+                _toggle = value;
+                data.setReportTitleVisibleAll(value);
+              }
+            }),
+            Text(' ${_.pageReportToggle}'),
+          ],
+        ),
+      ))],
       rows: const []),
   );
 
-  onColumns() => Material(
+  onDataColumns() => Material(
     color: Colors.grey[100],
     child: DataTable(
         horizontalMargin: widget.cellMargin,
@@ -252,39 +267,84 @@ class ScrollableDataTableState<T> extends State<ScrollableDataTable<T>> {
         headingRowHeight: widget.cellHeight,
         dataRowHeight: widget.cellHeight,
         columns: widget.columns
-            .map((c) => DataColumn(label: SizedBox(width: widget.cellWidth, child: Container(alignment: Alignment.centerRight, child: Text(c)))))
-            .toList(),
+          .map((c) => DataColumn(label: SizedBox(width: widget.cellWidth, child: Container(alignment: Alignment.centerRight, child: Text(c)))))
+          .toList(),
         rows: const []),
   );
 
-  onRows() => Material(
-    child: DataTable(
-      horizontalMargin: widget.cellMargin,
-      columnSpacing: widget.cellSpacing,
-      headingRowHeight: widget.cellHeight,
-      dataRowHeight: widget.cellHeight,
-      columns: [
-        DataColumn(label: SizedBox(width: widget.columnWidth, child: Center(child: Text(widget.rows.first))))
-      ],
-      rows: widget.rows
-        .sublist(0)
-        .map((c) => DataRow(cells: [DataCell(SizedBox(width: widget.columnWidth, child: Center(child: Text(c))))]))
-        .toList()),
-  );
+  onDataRows(_, data) {
+    return Material(
+      child: DataTable(
+        horizontalMargin: widget.cellMargin,
+        columnSpacing: widget.cellSpacing,
+        headingRowHeight: widget.cellHeight,
+        dataRowHeight: widget.cellHeight,
+        columns: [
+          DataColumn(label: SizedBox(width: widget.columnWidth, child: Center(child: Text(widget.rows.first))))
+        ],
+        rows: widget.rows
+          .sublist(0)
+          .map((c) {
+            var rowIndex = widget.rows.indexWhere((element) => element == c);
+            var title = data.isReportTitleVisible(c) ? c.substring(1) : c;
+            return DataRow(
+              color: rowIndex.isEven ? null : MaterialStateProperty.all(Colors.blue.shade50),
+              cells: [
+                DataCell(
+                  SizedBox(
+                    width: widget.columnWidth,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Tooltip(
+                          message: _.pageReportToggleTooltip,
+                          child: Checkbox(value: !data.isReportTitleVisible(data.reportTitles[rowIndex]), onChanged: (value) {
+                            if (value != null) data.setReportTitleVisible(rowIndex, value);
+                          }),
+                        ),
+                        Icon(Icons.show_chart, color: widget.palette[rowIndex]),
+                        Text(' $title'),
+                      ],
+                    ),
+                  ),
+                  onDoubleTap: () {
+                    if (!data.isReportTitleVisible(data.reportTitles[rowIndex]) && _toggle) {
+                      data.setReportTitleVisibleAll(false, redraw: false);
+                      data.setReportTitleVisible(rowIndex, true);
+                      _toggle = false;
+                    } else {
+                      data.setReportTitleVisibleAll(true);
+                      _toggle = true;
+                    }
+                  },
+                ),
+              ]);
+          })
+          .toList()),
+    );
+  }
 
-  onDataTable() => Material(
-    child: DataTable(
-      horizontalMargin: widget.cellMargin,
-      columnSpacing: widget.cellSpacing,
-      headingRowHeight: widget.cellHeight,
-      dataRowHeight: widget.cellHeight,
-      columns: widget.series.first
-        .map((c) => DataColumn(label: SizedBox(width: widget.cellWidth, child: Text('$c'))))
-        .toList(),
-      rows: widget.series
-        .sublist(0)
-        .map((row) => DataRow(cells: row.map((c) => DataCell(onBuildData(widget.cellWidth, c))).toList()))
-        .toList()));
+  onDataTable() {
+    int rowIndex = 0;
+    return Material(
+      child: DataTable(
+        horizontalMargin: widget.cellMargin,
+        columnSpacing: widget.cellSpacing,
+        headingRowHeight: widget.cellHeight,
+        dataRowHeight: widget.cellHeight,
+        columns: widget.series.first
+          .map((c) => DataColumn(label: SizedBox(width: widget.cellWidth, child: Text('$c'))))
+          .toList(),
+        rows: widget.series
+          .sublist(0)
+          .map((row) { rowIndex++;
+            return DataRow(
+              color: rowIndex.isOdd ? null : MaterialStateProperty.all(Colors.blue.shade50),
+              cells: row.map((c) => DataCell(onBuildData(widget.cellWidth, c))).toList());
+          })
+          .toList(),
+    ));
+  }
 
   onBuildData(double width, T data) => SizedBox(
       width: width,

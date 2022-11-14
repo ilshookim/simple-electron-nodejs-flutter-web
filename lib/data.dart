@@ -18,7 +18,6 @@ class Data extends ChangeNotifier {
   static const defaultSerialPortNone = 'none';
   static const defaultReportLabel = false;
   static const defaultReportMarker = true;
-  static const defaultReportLegend = true;
   static const defaultDemo = false;
   static final api = Api.instance;
 
@@ -125,13 +124,6 @@ class Data extends ChangeNotifier {
     api.setConfigTo('reportMarker', reportMarker).then((_) => notifyListeners());
   }
 
-  bool _reportLegend = api.getBoolCache('reportLegend', defaults: defaultReportLegend);
-  bool get reportLegend => _reportLegend;
-  set reportLegend(bool reportLegend) {
-    _reportLegend = reportLegend;
-    api.setConfigTo('reportLegend', reportLegend).then((_) => notifyListeners());
-  }
-
   bool demoInit = false;
   bool demoReport = false;
   void initReportDemo(description) {
@@ -172,6 +164,23 @@ class Data extends ChangeNotifier {
     demoReport = false;
     if (redraw) notifyListeners();
     return true;
+  }
+  bool isReportTitleVisible(title) {
+    return title[0] == '~';
+  }
+  void setReportTitleVisible(index, visible, {redraw = true}) {
+    if (visible) {
+      if (isReportTitleVisible(reportTitles[index])) reportTitles[index] = reportTitles[index].substring(1);
+    } else {
+      if (!isReportTitleVisible(reportTitles[index])) reportTitles[index] = '~${reportTitles[index]}';
+    }
+    if (redraw) notifyListeners();
+  }
+  void setReportTitleVisibleAll(visible, {redraw = true}) {
+    for (int index=0; index<reportTitles.length; index++) {
+      setReportTitleVisible(index, visible, redraw: false);
+    }
+    if (redraw) notifyListeners();
   }
 
   final StreamController<String> _wsRecipientCtrl = StreamController<String>();

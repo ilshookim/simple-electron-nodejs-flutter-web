@@ -7,6 +7,8 @@
   "pageReportMarker": "Marker",
   "pageReportLabel": "Label",
   "pageReportLegend": "Legend",
+  "pageReportToggle": "Toggle",
+  "pageReportToggleTooltip": "> Tab: Show/Hide Item\n> DoubleTab: Toggle This Item/Show All",
   "pageReportShowHide": "Show/Hide",
   "pageReportLoadFile": "Load File",
   "pageReportLoadFileError": "Cannot read file > because {exc}",

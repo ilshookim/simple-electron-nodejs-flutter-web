@@ -75,7 +75,7 @@ class LandingPage extends StatelessWidget {
           indicator: ShapeDecoration(
             shape: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.blue, width: 12.0)),
             color: Colors.blue.shade50),
-      ),
+        ),
         body: const TabBarView(
           physics: NeverScrollableScrollPhysics(),
           children: [

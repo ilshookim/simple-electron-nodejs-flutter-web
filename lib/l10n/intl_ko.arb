@@ -7,6 +7,8 @@
   "pageReportMarker": "마커",
   "pageReportLabel": "레이블",
   "pageReportLegend": "범례",
+  "pageReportToggle": "전체 토글",
+  "pageReportToggleTooltip": "> 탭: 항목 보기/감추기\n> 더블탭: 항목만 보기/전체 보기",
   "pageReportShowHide": "보이기/감추기",
   "pageReportLoadFile": "파일 불러오기",
   "pageReportLoadFileError": "파일에 문제가 있습니다 > 원인 {exc}",
