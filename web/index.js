@@ -7,10 +7,18 @@ const Path = require(`path`);
 const logger = require('electron-log');
 
 // Modules to control application life and create native browser window
-const { app, screen, dialog, BrowserWindow, Menu } = require(`electron`);
+const { app, screen, dialog, BrowserWindow, Menu, ipcMain } = require(`electron`);
+
+// Received messages in channel from renderer process to main process
+ipcMain.on('json', (event, json) => {
+  logger.info(`json ${event} ${JSON.stringify(json)}`);
+});
+ipcMain.on('args', (event, args) => {
+  logger.info(`args ${event} ${args}`);
+});
 
 // Remove the application menu.
-Menu.setApplicationMenu(null);
+// Menu.setApplicationMenu(null);
 
 // Keep a global reference of the window object, if you don`t, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -28,6 +36,8 @@ function createWindow() {
     height: recalcHeight,
     webPreferences: {
       nodeIntegration: true,
+      contextIsolation: false,
+      enableRemoteModule: true,
       preload: Path.join(__dirname, `preload.js`)
     }
   });
@@ -36,7 +46,7 @@ function createWindow() {
   mainWindow.loadFile(`index.html`);
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 
   // Emitted when the window is closed.
   mainWindow.on(`closed`, function () {

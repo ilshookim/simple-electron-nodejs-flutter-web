@@ -1,3 +1,6 @@
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:js' as js;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +13,12 @@ import 'settings.dart';
 void main() {
   Data.init(() {
     runApp(const App());
+
+    // Send message in channel from Dart to JS.
+    // It calls to channelDartToJS function in index.html
+    const channel = 'json';
+    final messages = ['Hello, World! From Dart to JS'];
+    js.context.callMethod('channelDartToJS', [js.JsObject.jsify({'channel': channel, 'messages': [...messages]})]);
   });
 }
 

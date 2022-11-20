@@ -85,6 +85,18 @@
       <div class="loader-1"></div>
     </div>
     <script>
+      // Channel from Dart To JS
+      const { ipcRenderer } = require('electron');
+      function channelDartToJS(args) {
+        // Send messages in channel from renderer process to main process
+        if (args != null && typeof args == 'object') {
+          const json = args;
+          ipcRenderer.send(json.channel, json);
+          console.log(`${json.channel} ${JSON.stringify(json)}`);
+        } else {
+          ipcRenderer.send('args', args);
+        }
+      }
       window.addEventListener('load', function(ev) {
         // Download main.dart.js
         _flutter.loader.loadEntrypoint({
@@ -93,14 +105,15 @@
           }
         }).then(function(engineInitializer) {
           return engineInitializer.initializeEngine();
-        }).then(function(appRunner) {
+        }).then(async function(appRunner) {
           // Remove the loading elements
           const loadingIndicator = document.getElementById("loading_indicator");
           if (loadingIndicator) loadingIndicator.remove();
           const loadingStatus = document.getElementById("loading_status");
           if (loadingStatus) loadingStatus.remove();
           // Run the flutter application
-          return appRunner.runApp();
+          const app = await appRunner.runApp();
+          return app;
         });
       });
     </script>
