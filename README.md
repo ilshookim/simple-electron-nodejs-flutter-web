@@ -257,9 +257,46 @@ Basically required to flutter, npm and node to build and release, also need to c
 
 ### The development environments on MacOS:
 
+Installation Guide
+```bash
+# install homebrew
+% /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+% touch ~/.zshrc
+% echo -n 'export PATH=/opt/homebrew/bin:$PATH' >> ~/.zshrc
+% source ~/.zshrc
+
+% brew --version
+Homebrew 3.6.16
+Homebrew/homebrew-core (git revision 458c9820bd1; last commit 2022-12-31)
+
+# install xcode/git
+% xcode-select --install
+% brew install git
+
+# install npm/node
+% brew install node@16
+% echo -n 'export PATH=/opt/homebrew/opt/node@16/bin:$PATH' >> ~/.zshrc
+% source ~/.zshrc
+
+# install vscode
+% brew install visual-studio-code --cask
+
+# install flutter (should check to USER_HERE in export line)
+% brew tap leoafarias/fvm
+% brew install fvm
+% fvm install stable
+% echo -n 'export PATH=/Users/[USER_HERE]/fvm/versions/stable/bin:$PATH' >> ~/.zshrc
+% source ~/.zshrc
+```
+
 Check to versions
 
 ```bash
+# Homebrew
+% brew --version
+Homebrew 3.6.16
+Homebrew/homebrew-core (git revision 458c9820bd1; last commit 2022-12-31)
+
 # Flutter/Dart
 % flutter --version
 Flutter 3.3.4 • channel stable • https://github.com/flutter/flutter.git
