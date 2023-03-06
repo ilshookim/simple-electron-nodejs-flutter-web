@@ -284,9 +284,9 @@ Homebrew/homebrew-core (git revision 458c9820bd1; last commit 2022-12-31)
 # install flutter (should check to USER_HERE in export line)
 % brew tap leoafarias/fvm
 % brew install fvm
-% fvm install stable
 % echo -n 'export PATH=/Users/[USER_HERE]/fvm/versions/stable/bin:$PATH' >> ~/.zshrc
 % source ~/.zshrc
+% fvm install stable
 ```
 
 Check to versions
