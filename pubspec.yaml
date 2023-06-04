@@ -45,7 +45,7 @@ dependencies:
   # Contains code to deal with internationalized/localized messages, 
   # date and number formatting and parsing, bi-directional text, 
   # and other internationalization issues.
-  intl: ^0.17.0
+  intl: ^0.18.0
 
   # A composable, multi-platform, Future-based API for HTTP requests.
   http: ^0.13.5
