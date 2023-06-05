@@ -70,9 +70,6 @@
     <link rel="manifest" href="manifest.json">
 
     <script type="text/javascript">
-      // Uses a combination of HTML elements, CSS, Canvas elements, and SVG elements.
-      window.flutterWebRenderer = "html";
-
       // The value below is injected by flutter build, do not touch.
       var serviceWorkerVersion = null;
     </script>
@@ -90,17 +87,22 @@
         _flutter.loader.loadEntrypoint({
           serviceWorker: {
             serviceWorkerVersion: serviceWorkerVersion,
+          },
+          onEntrypointLoaded: function(engineInitializer) {
+            // Uses a combination of HTML elements, CSS, Canvas elements, and SVG elements.
+            const config = {
+              renderer: "html", // or "canvaskit"
+            };
+            engineInitializer.initializeEngine(config).then(function(appRunner) {
+              // Remove the loading elements
+              const loadingIndicator = document.getElementById("loading_indicator");
+              if (loadingIndicator) loadingIndicator.remove();
+              const loadingStatus = document.getElementById("loading_status");
+              if (loadingStatus) loadingStatus.remove();
+              // Run the flutter application
+              appRunner.runApp();
+            });
           }
-        }).then(function(engineInitializer) {
-          return engineInitializer.initializeEngine();
-        }).then(function(appRunner) {
-          // Remove the loading elements
-          const loadingIndicator = document.getElementById("loading_indicator");
-          if (loadingIndicator) loadingIndicator.remove();
-          const loadingStatus = document.getElementById("loading_status");
-          if (loadingStatus) loadingStatus.remove();
-          // Run the flutter application
-          return appRunner.runApp();
         });
       });
     </script>

@@ -144,7 +144,9 @@ By default, flutter web renderer is html.
 If you want CanvasKit, You just disable this line.
 
 ```js
-window.flutterWebRenderer = "html";  // in web/index.html
+const config = {
+  renderer: "html", // or "canvaskit" in web/index.html
+};
 ```
 
 ### Electron App (Application Menu)
@@ -266,16 +268,17 @@ Installation Guide
 % source ~/.zshrc
 
 % brew --version
-Homebrew 3.6.16
-Homebrew/homebrew-core (git revision 458c9820bd1; last commit 2022-12-31)
+Homebrew 4.0.14
+Homebrew/homebrew-core (git revision 00783188ffd; last commit 2023-02-20)
+Homebrew/homebrew-cask (git revision 722b9ee1a7; last commit 2023-02-20)
 
 # install xcode/git
 % xcode-select --install
 % brew install git
 
 # install npm/node
-% brew install node@16
-% echo -n 'export PATH=/opt/homebrew/opt/node@16/bin:$PATH' >> ~/.zshrc
+% brew install node@18
+% echo -n 'export PATH=/opt/homebrew/opt/node@18/bin:$PATH' >> ~/.zshrc
 % source ~/.zshrc
 
 # install vscode
@@ -294,32 +297,32 @@ Check to versions
 ```bash
 # Homebrew
 % brew --version
-Homebrew 3.6.16
-Homebrew/homebrew-core (git revision 458c9820bd1; last commit 2022-12-31)
+Homebrew 4.0.14
+Homebrew/homebrew-core (git revision 00783188ffd; last commit 2023-02-20)
+Homebrew/homebrew-cask (git revision 722b9ee1a7; last commit 2023-02-20)
 
 # Flutter/Dart
-% flutter --version
-Flutter 3.3.4 • channel stable • https://github.com/flutter/flutter.git
-Framework • revision eb6d86ee27 (3 days ago) • 2022-10-04 22:31:45 -0700
-Engine • revision c08d7d5efc
-Tools • Dart 2.18.2 • DevTools 2.15.0
+Flutter 3.10.3 • channel stable • https://github.com/flutter/flutter.git
+Framework • revision f92f44110e (3 days ago) • 2023-06-01 18:17:33 -0500
+Engine • revision 2a3401c9bb
+Tools • Dart 3.0.3 • DevTools 2.23.1
 
 # Npm/NodeJS
 % npm --version
-8.5.0
+9.2.0
 
 % node --version
-v16.9.1
+v18.14.2
 
 # VisualStudioCode
 % code --version
-1.72.0
-64bbfbf67ada9953918d72e1df2f4d8e537d340e
-x64
+1.78.2
+b3e4e68a0bc097f0ae7907b217c1119af9e03435
+arm64
 
 # Git
 git --version
-git version 2.37.0 (Apple Git-136)
+git version 2.39.0
 ```
 
 ### The development environments on CentOS7:
